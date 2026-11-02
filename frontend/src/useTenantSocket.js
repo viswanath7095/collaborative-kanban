@@ -14,7 +14,7 @@ export default function useTenantSocket(tenantId, onEvent) {
     if (!token || !tenantId) return
 
     const client = new Client({
-      brokerURL: 'ws://localhost:5000/ws',
+      brokerURL: import.meta.env.VITE_WS_URL || 'ws://localhost:5000/ws',
       connectHeaders: { Authorization: `Bearer ${token}` },
       reconnectDelay: 3000,
       heartbeatIncoming: 10000,

@@ -1,13 +1,17 @@
 server:
-  port: 5000
+  port: ${PORT:5000}
 
 spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:5432/collaborative_kanban
-    username: kanban_app
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 0
+      max-lifetime: 240000
   jpa:
     hibernate:
       ddl-auto: validate
@@ -16,3 +20,7 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
   expiration-ms: 86400000
+
+app:
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}

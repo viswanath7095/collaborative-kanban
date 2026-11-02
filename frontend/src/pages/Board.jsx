@@ -62,7 +62,7 @@ export default function Board() {
   const [loading, setLoading] = useState(true)
   const onlineRef = useRef([])
   const connectedOnce = useRef(false)
-
+  const presenceTimer = useRef(null)
   const base = `/organizations/${orgId}/tenants/${tenantId}/boards`
   const tasksPath = `${base}/${boardId}/tasks`
   const columnsPath = `${base}/${boardId}/columns`
@@ -89,20 +89,21 @@ export default function Board() {
       )
   }, [base, boardId])
 
-  const loadPresence = useCallback(() => {
+    const loadPresence = useCallback(() => {
     return api
       .get(`/organizations/${orgId}/tenants/${tenantId}/presence`)
-      .then((res) =>
-        setOnline((cur) => {
-          const merged = [...res.data]
-          cur.forEach((u) => {
-            if (!merged.some((m) => m.userId === u.userId)) merged.push(u)
-          })
-          return merged
-        })
-      )
+      .then((res) => setOnline(res.data))
       .catch(() => {})
   }, [orgId, tenantId])
+
+  // safety net: re-read the authoritative list every 30 seconds
+  useEffect(() => {
+    const id = setInterval(loadPresence, 30000)
+    return () => {
+      clearInterval(id)
+      clearTimeout(presenceTimer.current)
+    }
+  }, [loadPresence])
 
   useEffect(() => {
     load().finally(() => setLoading(false))
@@ -131,15 +132,10 @@ export default function Board() {
         return
       }
 
-      if (ev.type === 'presence:online') {
-        const { userId, name } = ev.data
-        setOnline((cur) =>
-          cur.some((u) => u.userId === userId) ? cur : [...cur, { userId, name }]
-        )
-        return
-      }
-      if (ev.type === 'presence:offline') {
-        setOnline((cur) => cur.filter((u) => u.userId !== ev.data.userId))
+            if (ev.type === 'presence:online' || ev.type === 'presence:offline') {
+        // events can arrive out of order, so re-read the real list shortly after
+        clearTimeout(presenceTimer.current)
+        presenceTimer.current = setTimeout(loadPresence, 400)
         return
       }
 
