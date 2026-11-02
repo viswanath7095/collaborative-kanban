@@ -1,0 +1,18 @@
+server:
+  port: 5000
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:postgresql://localhost:5432/collaborative_kanban
+    username: kanban_app
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 86400000

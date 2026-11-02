@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+backend/target/
+backend/.settings/
+backend/.classpath
+backend/.project
+backend/.factorypath
+frontend/node_modules/
+frontend/dist/
+*.log
+.idea/
+.vscode/
