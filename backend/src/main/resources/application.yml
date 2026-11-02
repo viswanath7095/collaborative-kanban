@@ -1,26 +1,30 @@
 server:
-  port: ${PORT:5000}
-
-spring:
-  config:
-    import: optional:file:.env[.properties]
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    hikari:
-      maximum-pool-size: 5
-      minimum-idle: 0
-      max-lifetime: 240000
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
+  port: 5000
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration-ms: 86400000
 
 app:
+  jwt:
+    secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    expiration-ms: 86400000
   cors:
-    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+    allowed-origins: "http://localhost:5173,http://localhost:3000,https://collaborative-kanban-chi.vercel.app"
+
+cors:
+  allowed-origins: "http://localhost:5173,http://localhost:3000,https://collaborative-kanban-chi.vercel.app"
+
+spring:
+  application:
+    name: collaborative-kanban-backend
+  datasource:
+    url: jdbc:postgresql://ep-old-firefly-a1u0woai-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+    username: neondb_owner
+    password: npg_ehDPV7d0Alns
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
