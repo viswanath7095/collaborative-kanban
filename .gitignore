@@ -15,3 +15,7 @@ frontend/dist/
 *.zip
 node_modules/
 target/
+.env
+*.zip
+node_modules/
+target/
