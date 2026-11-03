@@ -11,3 +11,7 @@ frontend/dist/
 *.log
 .idea/
 .vscode/
+.env
+*.zip
+node_modules/
+target/
